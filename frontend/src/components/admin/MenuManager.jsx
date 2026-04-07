@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import Navbar from '../Navbar';
 import Header from '../Header';
+import API_URL from '../../config/api';
 
 const MenuManager = () => {
     const [day, setDay] = useState('');
@@ -27,7 +28,7 @@ const MenuManager = () => {
         }
         
         try {
-            const response = await fetch(`http://localhost:3000/menu/${day}`, {
+            const response = await fetch(`${API_URL}/menu/${day}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

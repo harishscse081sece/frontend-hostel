@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import Navbar from './Navbar';
 import Header from './Header';
+import API_URL from '../config/api';
 
 const UserProfile = () => {
     const [user, setUser] = useState(null);
@@ -14,7 +15,7 @@ const UserProfile = () => {
     const fetchProfile = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:3000/profile', {
+            const response = await fetch(`${API_URL}/profile`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

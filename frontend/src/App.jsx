@@ -10,6 +10,7 @@ import MenuManager from './components/admin/MenuManager';
 import AllComplaints from './components/admin/AllComplaints';
 import HomePage from './pages/HomePage';
 import Login from './pages/Login';
+import Signup from './pages/Signup';
 import Profile from './components/shared/Profile';
 import RoomInfo from './components/shared/RoomInfo';
 import FeeManagement from './components/shared/FeeManagement';
@@ -21,16 +22,13 @@ const App = () => {
   const [userRole, setUserRole] = useState('');
 
   useEffect(() => {
-    // Check if user is logged in
     const token = localStorage.getItem('token');
     if (token) {
       setIsLoggedIn(true);
-      // Get user role from token
       const payload = token.split('.')[1];
       const decoded = JSON.parse(atob(payload));
       setUserRole(decoded.role);
       
-      // Set default page based on role
       if (decoded.role === 'admin') {
         setCurrentPage('admin-dashboard');
       } else {
@@ -39,12 +37,10 @@ const App = () => {
     }
   }, []);
 
-  // Function to handle page changes
   const changePage = (page) => {
     setCurrentPage(page);
   };
 
-  // Function to handle login success
   const handleLoginSuccess = () => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -64,7 +60,10 @@ const App = () => {
   const renderPage = () => {
     if (!isLoggedIn) {
       if (currentPage === 'login') {
-        return <Login onLoginSuccess={handleLoginSuccess} />;
+        return <Login onLoginSuccess={handleLoginSuccess} changePage={changePage} />;
+      }
+      if (currentPage === 'signup') {
+        return <Signup changePage={changePage} />;
       }
       return <HomePage changePage={changePage} />;
     }

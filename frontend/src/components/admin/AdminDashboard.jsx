@@ -24,7 +24,7 @@ const AdminDashboard = ({ changePage }) => {
                     
                     <div className="bg-white p-6 rounded shadow">
                         <h3 className="text-lg font-bold mb-2">All Complaints</h3>
-                        <p className="text-gray-600 mb-4">View and manage complaints</p>
+                        <p className="text-gray-600 mb-4">View and solve complaints</p>
                         <button 
                             onClick={() => changePage('all-complaints')}
                             className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"

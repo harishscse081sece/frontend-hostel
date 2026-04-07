@@ -3,7 +3,7 @@ import Navbar from '../Navbar';
 import Header from '../Header';
 
 const Dashboard = () => {
-    // Mock dashboard data - you can connect to backend later
+    
     const stats = {
         totalComplaints: 12,
         pendingComplaints: 3,

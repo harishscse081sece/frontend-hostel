@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../Navbar';
 import Header from '../Header';
+import API_URL from '../../config/api';
 
 const MessMenu = () => {
     const [menu, setMenu] = useState([]);
@@ -11,7 +12,7 @@ const MessMenu = () => {
 
     const fetchMenu = async () => {
         try {
-            const response = await fetch('http://localhost:3000/menu');
+            const response = await fetch(`${API_URL}/menu`);
             const data = await response.json();
             setMenu(data.menu || []);
         } catch (error) {

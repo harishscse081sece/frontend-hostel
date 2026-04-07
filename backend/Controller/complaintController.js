@@ -41,7 +41,6 @@ const updateComplaintStatus = async (req, res) => {
         const { status } = req.body;
         const { role } = req.userData;
         
-        // Only admin can update complaint status
         if (role !== 'admin') {
             return res.status(403).json({ error: "Access denied. Admin only." });
         }

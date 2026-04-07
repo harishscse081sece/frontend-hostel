@@ -14,13 +14,21 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    phone: {
+        type: String,
+        required: true,
+        unique: true,
+        validate: {
+            validator: function(v) {
+                return /^[0-9]{10}$/.test(v);
+            },
+            message: 'Phone number must be 10 digits'
+        }
+    },
     role: {
         type: String,
         enum: ['student', 'admin'],
         default: 'student'
-    },
-    phone: {
-        type: String
     },
     roomId: {
         type: mongoose.Schema.Types.ObjectId,

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import Navbar from '../Navbar';
 import Header from '../Header';
+import API_URL from '../../config/api';
 
 const ComplaintForm = () => {
     const [type, setType] = useState('');
@@ -13,7 +14,7 @@ const ComplaintForm = () => {
         const token = localStorage.getItem('token');
         
         try {
-            const response = await fetch('http://localhost:3000/complaints', {
+            const response = await fetch(`${API_URL}/complaints`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

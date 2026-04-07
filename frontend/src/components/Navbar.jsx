@@ -35,7 +35,7 @@ const Navbar = () => {
         <nav className="bg-blue-600 text-white p-4">
             <div className="flex justify-between items-center">
                 <div className="flex items-center gap-4">
-                    <h1 className="text-xl font-bold">Smart Hostel Management</h1>
+                    <h1 className="text-xl font-bold">Hostel Management</h1>
                     {userName && <div className="text-sm bg-blue-500 px-3 py-1 rounded">Hello, {userName}</div>}
                 </div>
 

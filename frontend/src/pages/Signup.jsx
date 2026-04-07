@@ -2,17 +2,22 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import API_URL from '../config/api';
 
-const Login = ({ onLoginSuccess, changePage }) => {
+const Signup = ({ changePage }) => {
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const [phone, setPhone] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [role, setRole] = useState('student');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [remember, setRemember] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
 
     const validate = () => {
+        if (name.length < 3) {
+            setError('Name must be at least 3 characters');
+            return false;
+        }
         if (!/\S+@\S+\.\S+/.test(email)) {
             setError('Please enter a valid email address');
             return false;
@@ -25,6 +30,10 @@ const Login = ({ onLoginSuccess, changePage }) => {
             setError('Password must be at least 6 characters');
             return false;
         }
+        if (password !== confirmPassword) {
+            setError('Passwords do not match');
+            return false;
+        }
         setError('');
         return true;
     };
@@ -35,32 +44,27 @@ const Login = ({ onLoginSuccess, changePage }) => {
         setLoading(true);
 
         try {
-            const endpoint = `${API_URL}/auth/student`;
+            const endpoint = `${API_URL}/auth/admin`;
             const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, password, phone, role }),
+                body: JSON.stringify({ name, email, phone, password, role }),
             });
 
             const data = await response.json();
 
             if (!response.ok) {
-                setError(data.error || 'Login failed');
-                toast.error(data.error || 'Login failed');
+                setError(data.error || 'Registration failed');
+                toast.error(data.error || 'Registration failed');
             } else {
-                // Save token (remember -> localStorage, otherwise sessionStorage)
-                const storage = remember ? localStorage : sessionStorage;
-                storage.setItem('token', data.token);
-                if (data.user) storage.setItem('user', JSON.stringify(data.user));
-
-                toast.success(`Welcome back${data.user?.name ? ', ' + data.user.name : ''}!`);
-                onLoginSuccess(); // Notify App to update state
+                toast.success('Registration successful! Please login.');
+                changePage('login');
             }
         } catch (err) {
             setError(err.message);
-            toast.error('Login failed: ' + err.message);
+            toast.error('Registration failed: ' + err.message);
         } finally {
             setLoading(false);
         }
@@ -69,7 +73,7 @@ const Login = ({ onLoginSuccess, changePage }) => {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
             <div className="max-w-md w-full bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
+                <h2 className="text-2xl font-bold text-center mb-4">Sign Up</h2>
 
                 <div className="flex gap-3 justify-center mb-4">
                     <label className={`px-3 py-1 rounded cursor-pointer ${role === 'student' ? 'bg-blue-500 text-white' : 'bg-gray-100'}`}>
@@ -98,6 +102,18 @@ const Login = ({ onLoginSuccess, changePage }) => {
 
                 <form onSubmit={handleSubmit}>
                     {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
+
+                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-medium mb-2">Full Name</label>
+                        <input
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+                            placeholder="John Doe"
+                            required
+                        />
+                    </div>
 
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-medium mb-2">Email</label>
@@ -132,7 +148,7 @@ const Login = ({ onLoginSuccess, changePage }) => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
-                            placeholder="Enter your password"
+                            placeholder="Enter password"
                             required
                         />
                         <button
@@ -144,18 +160,16 @@ const Login = ({ onLoginSuccess, changePage }) => {
                         </button>
                     </div>
 
-                    <div className="flex items-center justify-between mb-6">
-                        <label className="inline-flex items-center">
-                            <input
-                                type="checkbox"
-                                checked={remember}
-                                onChange={(e) => setRemember(e.target.checked)}
-                                className="mr-2"
-                            />
-                            <span className="text-sm text-gray-700">Remember me</span>
-                        </label>
-
-                        <a href="#" className="text-sm text-blue-500 hover:underline">Forgot password?</a>
+                    <div className="mb-6">
+                        <label className="block text-gray-700 text-sm font-medium mb-2">Confirm Password</label>
+                        <input
+                            type={showPassword ? 'text' : 'password'}
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+                            placeholder="Confirm password"
+                            required
+                        />
                     </div>
 
                     <button
@@ -169,22 +183,22 @@ const Login = ({ onLoginSuccess, changePage }) => {
                                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
                                 </svg>
-                                Logging in...
+                                Signing up...
                             </>
                         ) : (
-                            'Login'
+                            'Sign Up'
                         )}
                     </button>
 
                     <div className="text-center">
                         <p className="text-sm text-gray-600">
-                            Don't have an account?{' '}
+                            Already have an account?{' '}
                             <button
                                 type="button"
-                                onClick={() => changePage('signup')}
+                                onClick={() => changePage('login')}
                                 className="text-blue-500 hover:underline font-medium"
                             >
-                                Sign Up
+                                Login
                             </button>
                         </p>
                     </div>
@@ -194,4 +208,4 @@ const Login = ({ onLoginSuccess, changePage }) => {
     );
 };
 
-export default Login;
+export default Signup;
